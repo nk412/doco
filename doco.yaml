@@ -1,0 +1,11 @@
+image_name: example-env
+
+mount_path: /app
+
+shell: bash
+
+# Additional docker run options (list format)
+docker_options:
+  # - "--env-file=.env"
+  # - "-p=8080:8080"  # Uncomment to add port mapping
+  # - "--network=host"  # Uncomment to use host network
