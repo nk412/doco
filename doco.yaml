@@ -2,6 +2,10 @@ image_name: example-env
 
 mount_path: /app
 
+
+platform: linux/amd64     # [DEFAULT] AMD64 (x86_64)
+# platform: linux/arm64     # For ARM64 platform (M1/M2/M4 Macs)
+
 shell: bash
 
 # Additional docker run options (list format)
