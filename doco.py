@@ -5,6 +5,7 @@ import sys
 import yaml
 import subprocess
 import argparse
+import tempfile
 from pathlib import Path
 
 def load_config():
@@ -32,14 +33,13 @@ def check_dockerfile(dockerfile):
         print(f"Error: Dockerfile not found at {dockerfile}")
         sys.exit(1)
 
-def read_ssh_key(ssh_key_path):
-    """Read the SSH private key from the provided path."""
-    try:
-        with open(os.path.expanduser(ssh_key_path), 'r') as f:
-            return f.read().strip()
-    except Exception as e:
-        print(f"Error reading SSH key from {ssh_key_path}: {e}")
+def read_ssh_key_path(ssh_key_path):
+    """Validate that the SSH key exists at the provided path."""
+    key_path = os.path.expanduser(ssh_key_path)
+    if not os.path.exists(key_path):
+        print(f"Error: SSH key not found at {ssh_key_path}")
         sys.exit(1)
+    return key_path
 
 def build_image(config, dockerfile):
     """Build the Docker image using the {dockerfile} in the current directory."""
@@ -49,18 +49,23 @@ def build_image(config, dockerfile):
 
     print(f"Building Docker image: {image_name} for {platform} platform...")
     try:
-        # Build for the specified platform (default is AMD64)
-        build_command = ["docker", "build"]
-
+        # Ensure we're using BuildKit
         build_env = os.environ.copy()
         build_env["DOCKER_BUILDKIT"] = "1"
 
+        # Basic build command
+        build_command = ["docker", "build", "--platform", platform, "-t", image_name]
+
+        # Handle SSH keys securely with BuildKit secrets if specified
         if ssh_key_path:
-            ssh_key = read_ssh_key(ssh_key_path)
-            build_command.extend(["--build-arg", f"SSH_PRIVATE_KEY={ssh_key}"])
+            ssh_key_abs_path = read_ssh_key_path(ssh_key_path)
+            build_command.extend(["--secret", f"id=ssh_key,src={ssh_key_abs_path}"])
+            print("Using SSH key with secure BuildKit secret mount")
 
-        build_command.extend(["--platform", platform, "-t", image_name, "-f", dockerfile, "."])
+        # Add dockerfile and context
+        build_command.extend(["-f", dockerfile, "."])
 
+        # Run the build
         subprocess.run(build_command, env=build_env, check=True)
         print("Build successful!")
         return image_name
