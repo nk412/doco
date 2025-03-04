@@ -32,15 +32,36 @@ def check_dockerfile(dockerfile):
         print(f"Error: Dockerfile not found at {dockerfile}")
         sys.exit(1)
 
+def read_ssh_key(ssh_key_path):
+    """Read the SSH private key from the provided path."""
+    try:
+        with open(os.path.expanduser(ssh_key_path), 'r') as f:
+            return f.read().strip()
+    except Exception as e:
+        print(f"Error reading SSH key from {ssh_key_path}: {e}")
+        sys.exit(1)
+
 def build_image(config, dockerfile):
     """Build the Docker image using the {dockerfile} in the current directory."""
     image_name = config.get("image_name", "doco-workspace")
     platform = config.get("platform", "linux/amd64")
+    ssh_key_path = config.get("ssh_key_path")
 
     print(f"Building Docker image: {image_name} for {platform} platform...")
     try:
         # Build for the specified platform (default is AMD64)
-        subprocess.run(["docker", "build", "--platform", platform, "-t", image_name, "-f", dockerfile, "."], check=True)
+        build_command = ["docker", "build"]
+
+        build_env = os.environ.copy()
+        build_env["DOCKER_BUILDKIT"] = "1"
+
+        if ssh_key_path:
+            ssh_key = read_ssh_key(ssh_key_path)
+            build_command.extend(["--build-arg", f"SSH_PRIVATE_KEY={ssh_key}"])
+
+        build_command.extend(["--platform", platform, "-t", image_name, "-f", dockerfile, "."])
+
+        subprocess.run(build_command, env=build_env, check=True)
         print("Build successful!")
         return image_name
     except subprocess.CalledProcessError as e:
