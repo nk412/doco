@@ -2,14 +2,18 @@ image_name: example-env
 
 mount_path: /app
 
-
 platform: linux/amd64     # [DEFAULT] AMD64 (x86_64)
 # platform: linux/arm64     # For ARM64 platform (M1/M2/M4 Macs)
 
 shell: bash
 
+#   Enable this if you have an SSH key you need to use during build,
+#   for eg. to install private repositories. Make sure this private key
+#   does not have a passphrase.
+# ssh_key_path: ~/ssh/id_ed25519
+
 # Additional docker run options (list format)
 docker_options:
-  # - "--env-file=.env"
+  # - "--env-file=.env" # Uncomment if you have an env file, to be used for env vars during run.
   # - "-p=8080:8080"  # Uncomment to add port mapping
-  # - "--network=host"  # Uncomment to use host network
+  # - "--network=host"  # Uncomment to use host network, if you need to talk services running on the host for example.

@@ -66,6 +66,7 @@ def build_image(config, dockerfile):
         build_command.extend(["-f", dockerfile, "."])
 
         # Run the build
+        print("Build command:", " ".join(build_command))
         subprocess.run(build_command, env=build_env, check=True)
         print("Build successful!")
         return image_name
