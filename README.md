@@ -27,7 +27,8 @@ Use a `.env` containing key-value pairs that are available at runtime.
 
 Use the AWS CLI to list buckets on Ubuntu 22
 
-1. Set up a simple Dockerfile to have AWS CLI setup on Ubuntu 22.04.
+
+### 1. Set up a simple Dockerfile to have AWS CLI setup on Ubuntu 22.04.
 
 ```Dockerfile
 FROM ubuntu:22.04
@@ -46,7 +47,7 @@ WORKDIR /app
 CMD ["/bin/bash"]
 ```
 
-2. Create a `doco.yaml`
+### 2. Create a `doco.yaml`
 
 ```yaml
 image_name: aws-example
@@ -62,14 +63,14 @@ docker_options:
 
 ```
 
-3. Create a `.env` file with AWS credentials
+### 3. Create a `.env` file with AWS credentials
 
 ```
 AWS_ACCESS_KEY_ID=...
 AWS_SECRET_ACCESS_KEY=...
 ```
 
-4. Run doco
+### 4. Run doco
 
 ```bash
 $ doco
