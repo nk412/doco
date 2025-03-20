@@ -2,15 +2,13 @@
 
 Isolated development environments with Docker.
 
-
 ### What?
-Build and mount your container with your current working directory mounted.
-Inspired by the now archived [`spotify/docker-interface`](https://github.com/spotify/docker_interface).
+
+Run docker container with your current working directory mounted. Just a python wrapper around a YAML config and some docker commands. Inspired by the now archived [docker_interface](https://github.com/spotify/docker_interface).
 
 
 ### Why?
 Emulate different setups, dependencies and environment configuration within Docker containers and not your local system. The mounted filesystem means you can make changes on your favorite IDE and have the immediately available to run in your container.
-
 
 ### How?
 
@@ -131,3 +129,30 @@ RUN --mount=type=secret,id=ssh_key,target=/tmp/ssh_key \
     ssh-add /root/.ssh/id_rsa && \
     pip install git+ssh://git@github.com/super-private-user/super-private-repo.git
 ```
+
+### Using your local SSH key during runtime
+
+Use secret mount like above to create a /home/root/.ssh/ dir
+
+TODO: example
+
+
+### GCP service account
+
+Have a service account keyfile on your working directory, and an entry in .env that sets `GOOGLE_APPLICATION_CREDENTIALS`.
+
+TODO: example
+
+
+### Talking to services on host
+
+Enable `--network=host` in doco.yaml, and access any services like MySQL through host `docker.host.internal`.
+
+TODO: example
+
+### Exposing ports container
+
+Enable port forwarding in doco.yaml.
+
+TODO: example
+
