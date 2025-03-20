@@ -1,19 +1,14 @@
-FROM python:3.9-slim
+FROM ubuntu:22.04
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    build-essential \
-    --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
+# system level deps
+RUN apt-get update && apt-get install -y curl libssl-dev unzip
 
-# Set up working directory
+# install aws cli
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+RUN unzip awscliv2.zip
+RUN ./aws/install
+
 WORKDIR /app
 
-# Install Python dependencies (if necessary)
-# COPY requirements.txt .
-# RUN pip install --no-cache-dir -r requirements.txt
-
-# Set environment variables
-ENV PYTHONUNBUFFERED=1
+CMD ["/bin/bash"]

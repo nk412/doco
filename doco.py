@@ -114,7 +114,7 @@ def start_container(image_name, config):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="doco - run containers with your pwd mounted"
+        description="doco - run containers with your cwd mounted"
     )
     parser.add_argument("--no-build", action="store_true", help="Skip building the image and use the existing one")
     parser.add_argument("--dockerfile", type=str, default="Dockerfile", required=False, help="the path to the dockerfile")
