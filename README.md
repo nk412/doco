@@ -111,7 +111,7 @@ root@c5c4e2155aa9:/example/aws# aws s3 ls
 ## Other scenarios
 
 
-### Using your local SSH key during build
+### ● Using your local SSH key during build
 
 Make your SSH key available during build to pull private repos, for instance
 
@@ -131,27 +131,27 @@ RUN --mount=type=secret,id=ssh_key,target=/tmp/ssh_key \
     pip install git+ssh://git@github.com/super-private-user/super-private-repo.git
 ```
 
-### Using your local SSH key during runtime
+### ● Using your local SSH key during runtime
 
 Use secret mount like above to create a /home/root/.ssh/ dir
 
 TODO: example
 
 
-### GCP service account
+### ● GCP service account
 
 Have a service account keyfile on your working directory, and an entry in .env that sets `GOOGLE_APPLICATION_CREDENTIALS`.
 
 TODO: example
 
 
-### Talking to services on host
+### ● Talking to services on host
 
 Enable `--network=host` in doco.yaml, and access any services like MySQL through host `docker.host.internal`.
 
 TODO: example
 
-### Exposing ports container
+### ● Exposing ports on the container
 
 Enable port forwarding in doco.yaml.
 
