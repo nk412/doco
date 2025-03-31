@@ -25,7 +25,7 @@ Use a `.env` containing key-value pairs that are available at runtime.
 
 ## Example
 
-Use the AWS CLI to list buckets on Ubuntu 22
+### TASK: Use the AWS CLI to list buckets on Ubuntu 22
 
 
 ### 1. Set up a simple Dockerfile to have AWS CLI setup on Ubuntu 22.04.
