@@ -99,11 +99,12 @@ def start_container(image_name, config):
     # Add image name
     cmd.append(image_name)
 
-    # Add bash (or specified shell)
-    shell = config.get("shell", "bash")
-    cmd.append(shell)
+    # # Add bash (or specified shell)
+    # shell = config.get("shell", "bash")
+    # cmd.append(shell)
 
     print(f"Starting container with {current_dir} mounted at {mount_path} on {platform} platform...")
+    print("Command:", " ".join(cmd))
     try:
         subprocess.run(cmd)
     except KeyboardInterrupt:
@@ -112,7 +113,28 @@ def start_container(image_name, config):
         print(f"Error running container: {e}")
         sys.exit(1)
 
+def init_wizard():
+    """Initialize a new doco.yaml configuration file."""
+    if os.path.exists("doco.yaml"):
+        print("Error: doco.yaml already exists in the current directory.")
+        sys.exit(1)
+    else:
+        print("Initializing new doco.yaml configuration...")
+        config = {
+            "image_name": "doco-workspace",
+            "platform": "linux/amd64",
+            "mount_path": "/workspace",
+            "docker_options": [],
+            "shell": "bash"
+        }
+        with open("doco.yaml", "w") as f:
+            yaml.dump(config, f)
+        print("Configuration file created. Edit it to customize your setup.")
+
 def main():
+    if len(sys.argv) > 1  and sys.argv[1] == "init":
+        init_wizard()
+        return
     parser = argparse.ArgumentParser(
         description="doco - run containers with your cwd mounted"
     )
