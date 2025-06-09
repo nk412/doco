@@ -44,7 +44,7 @@ def read_ssh_key_path(ssh_key_path):
 def build_image(config, dockerfile):
     """Build the Docker image using the {dockerfile} in the current directory."""
     image_name = config.get("image_name", "doco-workspace")
-    platform = config.get("platform", "linux/amd64")
+    platform = config.get("platform")
     ssh_key_path = config.get("ssh_key_path")
 
     print(f"Building Docker image: {image_name} for {platform} platform...")
@@ -54,7 +54,10 @@ def build_image(config, dockerfile):
         build_env["DOCKER_BUILDKIT"] = "1"
 
         # Basic build command
-        build_command = ["docker", "build", "--platform", platform, "-t", image_name]
+        build_command = ["docker", "build", "-t", image_name]
+
+        if platform:
+            build_command.extend(["--platform", platform])
 
         # Handle SSH keys securely with BuildKit secrets if specified
         if ssh_key_path:
@@ -77,14 +80,15 @@ def build_image(config, dockerfile):
 def start_container(image_name, config):
     mount_path = config.get("mount_path", "/workspace")
     current_dir = os.getcwd()
-    platform = config.get("platform", "linux/amd64")
+    platform = config.get("platform")
 
     extra_options = config.get("docker_options", [])
 
     cmd = ["docker", "run", "-it", "--rm"]
 
     # Set platform from config (default is AMD64)
-    cmd.extend(["--platform", platform])
+    if platform:
+        cmd.extend(["--platform", platform])
 
     # Add volume mount for current directory
     cmd.extend(["-v", f"{current_dir}:{mount_path}"])
